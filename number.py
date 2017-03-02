@@ -19,12 +19,12 @@ cross_entropy = tf.reduce_mean(-tf.reduce_sum(y_ * tf.log(y), reduction_indices=
 train_step = tf.train.GradientDescentOptimizer(0.5).minimize(cross_entropy)
 sess = tf.InteractiveSession()
 tf.global_variables_initializer().run()
-for i in range(1000):
+for i in range(100):
     print (i/10)
-    batch_xs, batch_ys = mnist.train.next_batch(100)
+    batch_xs, batch_ys = mnist.train.next_batch(10000)
     sess.run(train_step, {x: batch_xs, y_: batch_ys})
 
-
+print(sess.run(W))
 
 correct_prediction = tf.equal(tf.argmax(y,1), tf.argmax(y_,1))
 accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
@@ -38,13 +38,18 @@ for i in range(0,784) :
         list.append(0.)
 
 
-img = Image.open('MYDATA/6_1.png').convert('RGBA')
+img = Image.open('MYDATA/8_1.png').convert('RGBA')
 a = np.array(img)
 fun = lambda t: 1-(t/255)
 vfunc = np.vectorize(fun)
 six = vfunc(a)
 
-test = [six.tolist()]
+tab = array('f')
+for i in range(0,28):
+    for j in range(0,28):
+        tab.append(six[i][j][0])
+
+test = [list.tolist(),tab.tolist()]
 
 arg = tf.argmax(y,1)
 print(sess.run([arg,y],{x:test}))
